@@ -1,0 +1,87 @@
+/* Center page and add background gradient */
+.login-page {
+    height: 100vh;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    padding: 20px;
+}
+
+/* Card styling */
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Button styling */
+.login-btn {
+    background: #6e8efb;
+    border: none;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+    background: #5a77e0;
+}
+
+/* Forgot password link */
+.forgot-link {
+    color: #6e8efb;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+
+/* for OTP section */
+
+/* OTP container */
+.otp-container {
+    gap: 10px;
+    justify-content: center;
+}
+
+.otp-input {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+    text-align: center;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+.otp-input:focus {
+    border-color: #6e8efb;
+    box-shadow: 0 0 5px rgba(110, 142, 251, 0.5);
+    outline: none;
+}
+
+
+
+/* Card fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive for small devices */
+@media(max-width: 576px) {
+    .login-card {
+        padding: 25px 15px;
+    }
+}
