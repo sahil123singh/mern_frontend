@@ -5,7 +5,10 @@ import Register from "./components/auth_flow/Register";
 import VerifyOtp from "./components/auth_flow/VerifyOtp";
 import Login from "./components/auth_flow/Login";
 import ForgetPassword from "./components/auth_flow/ForgetPassword";
-// import ResetPassword from "./components/auth_flow/ResetPassword";
+import ResetPassword from "./components/auth_flow/ResetPassword";
+
+import UserHome from "./components/user/UserHome";
+import UserProfile from "./components/user/UserProfile"
 // import Dashboard from "./components/auth_flow/Dashboard";
 
 export default function App() {
@@ -20,8 +23,14 @@ export default function App() {
             <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgetPassword />} />
-            {/* <Route path="/reset-password" element={<ResetPassword />} /> */}
-            {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+            <Route path='/reset-password' element={<ResetPassword />} />
+
+
+
+            {/* User */}
+            <Route path="/home" element={<UserHome />} />
+            <Route path="/profile" element={<UserProfile />} />
+
           </Routes>
         </main>
         {/* <Footer /> */}

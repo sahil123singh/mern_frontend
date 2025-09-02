@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import 'react-toastify/dist/ReactToastify.css';
 import '../../css/login.css';
 
 import API from '../../api';
 
 export default function Register() {
-  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "" });
+  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "", role: "user" });
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,48 +32,62 @@ export default function Register() {
         <h3 className="card-title text-center mb-4">Register</h3>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
+          {/* First Name */}
+          <div className="mb-3 position-relative">
+            <span className="input-icon"><FaUser /></span>
             <input
               type="text"
               name="firstName"
-              className="form-control"
+              className="form-control ps-5"
               placeholder="First Name"
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="mb-3">
+          {/* Last Name */}
+          <div className="mb-3 position-relative">
+            <span className="input-icon"><FaUser /></span>
             <input
               type="text"
               name="lastName"
-              className="form-control"
+              className="form-control ps-5"
               placeholder="Last Name"
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="mb-3">
+          {/* Email */}
+          <div className="mb-3 position-relative">
+            <span className="input-icon"><FaEnvelope /></span>
             <input
               type="email"
               name="email"
-              className="form-control"
+              className="form-control ps-5"
               placeholder="Email"
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="mb-3">
+          {/* Password with toggle */}
+          <div className="mb-3 position-relative">
+            <span className="input-icon"><FaLock /></span>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
-              className="form-control"
+              className="form-control ps-5 pe-5"
               placeholder="Password"
               onChange={handleChange}
               required
             />
+            <span 
+              className="toggle-password" 
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+            </span>
           </div>
 
           <button className="btn btn-primary w-100 login-btn">Register</button>
