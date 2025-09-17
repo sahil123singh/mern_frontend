@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "http://localhost:4000"
+    baseURL: "http://10.242.213.8:4000"
 });
 
 API.interceptors.request.use((req) => {
@@ -9,6 +9,7 @@ API.interceptors.request.use((req) => {
     if(token) {
         req.headers.Authorization =  `${token}`;
     }
+    console.log('token======>>', token)
     return req;
 })
 

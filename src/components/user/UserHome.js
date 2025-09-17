@@ -1,132 +1,320 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import { FaHome, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
+
 import API from "../../api";
+import Header from "../Header";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaUserCircle,
+  FaBookmark,
+  FaComment,
+  FaShare,
+  FaEllipsisH
+} from "react-icons/fa";
+import "../../css/homeFeed.css";
 
-export default function UserHome() {
-    const navigate = useNavigate();
-    const [user, setUser] = useState(null);
+export default function HomeFeed() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [likedPosts, setLikedPosts] = useState(new Set());
+  const [bookmarkedPosts, setBookmarkedPosts] = useState(new Set());
+  const [commentText, setCommentText] = useState({});
+  const navigate = useNavigate();  // <-- Initialize navigate
 
-    // Fetch user profile
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            toast.error("Please login first");
-            navigate("/login");
-            return;
-        }
+  const loggedInUserId = localStorage.getItem("userId");
 
-        const fetchProfile = async () => {
-            try {
-                const response = await API.get("/users/profile");
-                if (response?.data?.statusCode === 200) {
-                    setUser(response.data.data);
-                } else {
-                    toast.error("Failed to load profile");
-                }
-            } catch (error) {
-                toast.error(error.response?.data?.message || "Error fetching profile");
+  const fetchFeedPosts = async () => {
+    try {
+      const { data } = await API.get("/posts/all");
+      if (data?.statusCode === 200) {
+        setPosts(data.data || []);
+        // Initialize liked and bookmarked sets from fetched posts
+        const likedSet = new Set();
+        const bookmarkedSet = new Set();
+        (data.data || []).forEach((post) => {
+          if (post.likedByMe) likedSet.add(post._id);
+          if (post.favorited) bookmarkedSet.add(post._id);
+        });
+        setLikedPosts(likedSet);
+        setBookmarkedPosts(bookmarkedSet);
+      } else {
+        toast.info(data?.message || "No posts found");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error fetching feed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeedPosts();
+  }, []);
+
+  const handleLike = async (postId) => {
+    try {
+      const { data } = await API.post(`/posts/like`, { postId, like: 'like' });
+      if (data?.statusCode === 200) {
+        setPosts((prev) =>
+          prev.map((p) => {
+            if (p._id === postId) {
+              const isLikedNow = !p.likedByMe;
+              const newLikeCount = isLikedNow ? (p.likeCount || 0) + 1 : (p.likeCount || 0) - 1;
+              return {
+                ...p,
+                likedByMe: isLikedNow,
+                likeCount: newLikeCount,
+              };
             }
-        };
+            return p;
+          })
+        );
+        setLikedPosts((prev) => {
+          const newSet = new Set(prev);
+          if (newSet.has(postId)) {
+            newSet.delete(postId);
+          } else {
+            newSet.add(postId);
+          }
+          return newSet;
+        });
+      }
+    } catch {
+      toast.error("Error liking post");
+    }
+  };
 
-        fetchProfile();
-    }, [navigate]);
+  const handleBookmark = async (postId) => {
+    try {
+      const { data } = await API.post(`/posts/like`, { postId, like: 'fav' });
+      if (data?.statusCode === 200) {
+        setPosts((prev) =>
+          prev.map((p) =>
+            p._id === postId ? { ...p, favorited: !p.favorited } : p
+          )
+        );
+        setBookmarkedPosts((prev) => {
+          const newSet = new Set(prev);
+          if (newSet.has(postId)) {
+            newSet.delete(postId);
+          } else {
+            newSet.add(postId);
+          }
+          return newSet;
+        });
+      }
+    } catch {
+      toast.error("Error adding to favorites");
+    }
+  };
 
-    // Logout
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        toast.success("Logged out successfully");
-        setTimeout(() => navigate("/login"), 1000);
-    };
+  const handleComment = async (postId) => {
+    const text = commentText[postId];
+    if (!text?.trim()) return;
+    try {
+      const { data } = await API.post(`/posts/${postId}/comment`, { text });
+      if (data?.statusCode === 200) {
+        toast.success("Comment added!");
+        setCommentText((prev) => ({ ...prev, [postId]: "" }));
+        // Optionally refresh comments or post data here
+      }
+    } catch {
+      toast.error("Error adding comment");
+    }
+  };
 
-    // Helper: get profile image as circle
-    const getProfileImage = () => {
-        const size = 35; // diameter in px
-        if (user?.userInfo?.profileImage) {
-            const url = user.userInfo.profileImage.startsWith("http")
-                ? user.userInfo.profileImage
-                : `${API.defaults.baseURL}${user.userInfo.profileImage}`;
-            return (
-                <img
-                    src={url}
-                    alt="Profile"
-                    style={{
-                        width: `${size}px`,
-                        height: `${size}px`,
-                        objectFit: "cover",
-                        borderRadius: "50%"
-                    }}
-                />
-            );
-        }
-        return <FaUserCircle size={size} />;
-    };
-
+  if (loading) {
     return (
-        <div className="vh-100 d-flex flex-column">
-            {/* Navbar */}
-            <nav className="navbar navbar-dark bg-primary px-3 d-flex justify-content-between">
-                <span className="navbar-brand d-flex align-items-center">
-                    <FaHome className="me-2" /> User Home
-                </span>
+      <div className="instagram-container">
+        <Header />
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+        </div>
+      </div>
+    );
+  }
 
-                <div className="d-flex align-items-center gap-2">
-                    <button
-                        className="btn btn-light btn-sm d-flex align-items-center p-0"
-                        onClick={() => navigate("/profile")}
-                        style={{ borderRadius: "50%" }}
-                    >
-                        {getProfileImage()}
+  if (posts.length === 0) {
+    return (
+      <div className="instagram-container">
+        <Header />
+        <div className="feed-container">
+          <div className="feed-content">
+            <div className="empty-feed">
+              <div className="empty-icon">📷</div>
+              <h3>No Posts Yet</h3>
+              <p>Follow users to see their posts here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="instagram-container">
+      <Header />
+      <div className="feed-container">
+        <div className="feed-content">
+          {posts.map((post) => {
+            console.log('post========>>', post)
+            const isLiked = likedPosts.has(post._id);
+            const isBookmarked = bookmarkedPosts.has(post._id);
+            const user = post?.userId?.userInfo || {}; // Assuming post.user contains user info
+
+            const profileImageUrl = user?.profileImage
+              ? (user?.profileImage.startsWith("http")
+                ? user?.profileImage
+                : `${API.defaults.baseURL}${user?.profileImage}`)
+              : null;
+
+            // Function to navigate to user profile
+            const goToUserProfile = () => {
+              if (post?.userId?._id) {
+                navigate('/details', { state: { userId: post.userId._id } });
+              } else {
+                toast.info("User  profile not available");
+              }
+            };
+
+            return (
+              <div key={post._id} className="post-card">
+                {/* Post Header */}
+                <div className="post-header">
+                  <div className="post-user">
+                    <button className="user-avatar-btn"
+                      onClick={() => window.alert(`Go to ${user.firstName}'s profile`)}>
+                      {profileImageUrl ? (
+                        <img
+                          src={profileImageUrl}
+                          alt={user?.firstName}
+                          className="profile-avatar"
+                        />
+                      ) : (
+                        <FaUserCircle className="profile-avatar-placeholder" />
+                      )}
                     </button>
-
-                    <button className="btn btn-danger btn-sm d-flex align-items-center" onClick={handleLogout}>
-                        <FaSignOutAlt className="me-1" /> Logout
+                    <div className="user-info">
+                      <button
+                        className="username-btn"
+                        // onClick={() => window.alert(`Go to ${user.firstName}'s profile`)}
+                        onClick={goToUserProfile}
+                      >
+                      {user?.firstName} {user?.lastName}
                     </button>
+                    <span className="post-time">
+                      {new Date(post.createdAt || Date.now()).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
-            </nav>
+                <button className="post-options"
+                  onClick={() => window.alert("Post options")}>
+                  <FaEllipsisH />
+                </button>
+              </div>
 
-            {/* Content */}
-            <div className="container mt-4 flex-grow-1">
-                {user ? (
-                    <h2>Welcome, {user.userInfo.firstName} {user.userInfo.lastName}</h2>
-                ) : (
-                    <p>Loading profile...</p>
-                )}
-
-                <div className="row mt-4">
-                    {/* Quick Action */}
-                    <div className="col-md-4 mb-3">
-                        <div className="card shadow p-3">
-                            <h5>Quick Action</h5>
-                            <p className="text-muted">Update your profile details</p>
-                            <button className="btn btn-primary btn-sm" onClick={() => navigate("/profile")}>
-                                Go to Profile
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Messages */}
-                    <div className="col-md-4 mb-3">
-                        <div className="card shadow p-3">
-                            <h5>Messages</h5>
-                            <p className="text-muted">Check system notifications</p>
-                            <button className="btn btn-warning btn-sm">View Messages</button>
-                        </div>
-                    </div>
-
-                    {/* Settings */}
-                    <div className="col-md-4 mb-3">
-                        <div className="card shadow p-3">
-                            <h5>Settings</h5>
-                            <p className="text-muted">Manage account settings</p>
-                            <button className="btn btn-success btn-sm">Go to Settings</button>
-                        </div>
-                    </div>
+                {/* Post Content */ }
+            <div className="post-content">
+              {post.image ? (
+                <div className="post-image-container">
+                  <img
+                    src={post.image.startsWith("http") ? post.image : `${API.defaults.baseURL}${post.image}`}
+                    alt={post.title || "Post image"}
+                    className="post-image"
+                  />
                 </div>
+              ) : (
+                <div className="text-post">
+                  <h3 className="post-title">{post.title || "Untitled"}</h3>
+                  <p className="post-description">{post.caption || post.description || ""}</p>
+                </div>
+              )}
             </div>
 
-            <ToastContainer position="top-right" newestOnTop />
-        </div>
-    );
+            {/* Post Actions */ }
+            <div className="post-actions">
+              <div className="action-buttons">
+                <button
+                  className={`action-btn like-btn ${isLiked ? "liked" : ""}`}
+                  onClick={() => handleLike(post._id)}
+                  aria-label={isLiked ? "Unlike" : "Like"}
+                >
+                  {isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+                </button>
+                <button
+                  className="action-btn"
+                  onClick={() => window.alert("Open comments")}
+                  aria-label="Comment"
+                >
+                  <FaComment />
+                </button>
+                <button
+                  className="action-btn"
+                  onClick={() => window.alert("Share post")}
+                  aria-label="Share"
+                >
+                  <FaShare />
+                </button>
+              </div>
+              <button
+                className={`bookmark-btn ${isBookmarked ? "favorited" : ""}`}
+                onClick={() => handleBookmark(post._id)}
+                aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
+              >
+                {isBookmarked ? <FaBookmark /> : <FaBookmark color="blue" />}
+              </button>
+            </div>
+
+            {/* Comment input */ }
+            <div className="comment-input-container"
+              style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+              <input
+                type="text"
+                placeholder="Add a comment..."
+                value={commentText[post._id] || ""}
+                onChange={(e) =>
+                  setCommentText((prev) => ({ ...prev, [post._id]: e.target.value }))
+                }
+                className="comment-input"
+                style={{ flexGrow: 1, padding: "6px 8px", borderRadius: "4px", border: "1px solid #ccc" }}
+              />
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => handleComment(post._id)}
+                style={{ padding: "6px 12px", cursor: "pointer" }}
+              >
+                Post
+              </button>
+            </div>
+
+            {/* Post Info */ }
+            <div className="post-info" style={{ marginTop: "8px" }}>
+              <div className="likes-count">
+                <strong>{post.likeCount || 0} likes</strong>
+              </div>
+              {(post.caption || post.description) && (
+                <div className="post-caption">
+                  <span className="caption-text">{post.caption || post.description}</span>
+                </div>
+              )}
+              <div
+                className="view-comments"
+                onClick={() => window.alert("View comments")}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter") window.alert("View comments"); }}
+                style={{ cursor: "pointer", color: "#555", marginTop: "4px" }}
+              >
+                View all {post.commentCount || 0} comments
+              </div>
+            </div>
+              </div>
+        );
+          })}
+      </div>
+    </div>
+    </div >
+  );
 }

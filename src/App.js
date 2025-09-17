@@ -8,7 +8,15 @@ import ForgetPassword from "./components/auth_flow/ForgetPassword";
 import ResetPassword from "./components/auth_flow/ResetPassword";
 
 import UserHome from "./components/user/UserHome";
-import UserProfile from "./components/user/UserProfile"
+import EditProfile from "./components/user/EditProfile"
+import UserDetails from "./components/user/UserDetails"
+
+import AddPost from "./components/post/AddPost";
+import MyPost from "./components/post/MyPost";
+import MyFavPost from "./components/post/MyFavPost";
+import Messages from "./components/messages/Messages";
+import Settings from './components/messages/Settings'
+import Notifications from "./components/messages/Notifications";
 // import Dashboard from "./components/auth_flow/Dashboard";
 
 export default function App() {
@@ -29,7 +37,22 @@ export default function App() {
 
             {/* User */}
             <Route path="/home" element={<UserHome />} />
-            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+
+            <Route path="/details" element={<UserDetails />} />
+
+            {/* posts */}
+            <Route path="/add-post" element={<AddPost />} />
+            <Route path="/my-posts" element={<MyPost />} />
+            <Route path="/favourite" element={<MyFavPost />} />
+
+            {/* messages */}
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/notifications" element={<Notifications />} />
+
+
+
 
           </Routes>
         </main>
