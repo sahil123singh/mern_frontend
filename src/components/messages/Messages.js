@@ -63,7 +63,7 @@ export default function Messages() {
         const userId = localStorage.getItem("userId");
         setCurrentUserId(userId);
 
-        socketRef.current = io("http://localhost:4000", {
+        socketRef.current = io("http://10.242.213.8:4000", {
             path: "/api/v1/connect",
             query: { userId }
         });
