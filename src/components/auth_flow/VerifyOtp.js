@@ -41,7 +41,6 @@ export default function VerifyOtp() {
 
         try {
             let response = await API.post('/users/verify', { email: state?.email, otp: otpValue });
-            console.log('response=====>>', response?.data?.data?.email)
             toast.success("Verified! You can login now.", { autoClose: 3000 });
             setTimeout(() => navigate('/reset-password', { state: { email: response?.data?.data?.email } }), 1000);
         } catch (err) {

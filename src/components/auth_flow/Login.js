@@ -21,10 +21,12 @@ export default function Login() {
             const response = await API.post("/users/login", form);
             if (response?.data?.statusCode === 200) {
                 localStorage.setItem("token", response?.data?.data?.token);
+                localStorage.setItem("userId", response?.data?.data?.id);
                 toast.success("Login successful!", { autoClose: 3000 });
                 setTimeout(() => navigate("/home"), 1000);
             }
         } catch (error) {
+            console.log('error======>>', error?.response?.data)
             toast.error(error.response?.data?.message || "Invalid credentials", { autoClose: 3000 });
         }
     };
@@ -59,8 +61,8 @@ export default function Login() {
                             onChange={handleChange}
                             required
                         />
-                        <span 
-                            className="toggle-password" 
+                        <span
+                            className="toggle-password"
                             onClick={() => setShowPassword(!showPassword)}
                         >
                             {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}

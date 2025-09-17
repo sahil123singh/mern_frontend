@@ -11,3 +11,371 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* 🌞 Light mode (default) */
+body {
+  background: #f8f9fa;
+  color: #212529;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* 🌙 Dark mode full coverage */
+body.dark-theme {
+  background-color: #0d1117 !important;
+  /* full dark background */
+  color: #e6edf3 !important;
+}
+
+/* Override Bootstrap light backgrounds */
+body.dark-theme .bg-light,
+body.dark-theme .container,
+/* body.dark-theme .container-fluid, */
+body.dark-theme .row,
+body.dark-theme main,
+body.dark-theme section,
+body.dark-theme .col,
+body.dark-theme [class*="col-"] {
+  background-color: #0d1117 !important;
+  color: #e6edf3 !important;
+}
+
+
+/* Navbar */
+/* body.dark-theme .navbar-nav .nav-link.active {
+  color: #fff !important;
+} */
+
+
+body.dark-theme .navbar-nav .nav-link:hover,
+body.dark-theme .navbar-nav .nav-link.active {
+  color: #fff !important;
+}
+
+/* Header buttons */
+
+body.dark-theme .nav-item {
+  color: #fff !important;
+
+}
+
+body.dark-theme .btn-outline-light {
+  background-color: transparent !important;
+  color: #e6edf3 !important;
+  border-color: #f8f9fa;
+  /* Light border */
+
+}
+
+body.dark-theme .btn-outline-light:hover {
+  background-color: #fff !important;
+  color: #000a16 !important;
+}
+
+/* Cards / modals / profile cards */
+body.dark-theme .card,
+body.dark-theme .modal-content,
+body.dark-theme .profile-card {
+  background-color: #1e2329 !important;
+  color: #e6edf3 !important;
+  border: 1px solid #30363d;
+}
+
+/* Stats section: Posts / Followers / Following */
+/* body.dark-theme .profile-stats .text-muted {
+  color: #8b949e !important;
+} */
+
+/* body.dark-theme .profile-stats h5 {
+  color: #e6edf3 !important;
+} */
+
+/* Forms */
+body.dark-theme .form-control,
+body.dark-theme .form-select {
+  background-color: #161b22 !important;
+  color: #e6edf3 !important;
+  border: 1px solid #30363d;
+}
+
+body.dark-theme .form-control::placeholder {
+  color: #8b949e !important;
+}
+
+/* Buttons */
+body.dark-theme .btn-primary {
+  background-color: #238636 !important;
+  border-color: #238636 !important;
+  color: #e6edf3 !important;
+}
+
+body.dark-theme .btn-primary:hover {
+  background-color: #2ea043 !important;
+  border-color: #2ea043 !important;
+}
+
+body.dark-theme .btn-outline-secondary {
+  color: #e6edf3 !important;
+  border-color: #30363d !important;
+}
+
+body.dark-theme .btn-outline-secondary:hover {
+  background-color: #30363d !important;
+  color: #58a6ff !important;
+}
+
+/* Links */
+body.dark-theme a {
+  color: #cfd3d8;
+}
+
+body.dark-theme a:hover {
+  color: #79c0ff !important;
+}
+
+/* Toastify */
+body.dark-theme .Toastify__toast {
+  background: #161b22 !important;
+  color: #e6edf3 !important;
+}
+
+/* Posts / cards buttons */
+body.dark-theme .card .btn-light {
+  background-color: #161b22 !important;
+  color: #e6edf3 !important;
+  border: 1px solid #30363d;
+}
+
+body.dark-theme .card .btn-light:hover {
+  background-color: #30363d !important;
+  color: #58a6ff !important;
+}
+
+/* joined at, post follower and following */
+body.dark-theme .card .text-muted {
+  color: #e6edf3 !important;
+}
+
+
+/* Dark mode background fix */
+body.dark-theme .dark-theme-bg {
+  background-color: #0d1117 !important;
+  color: #e6edf3 !important;
+}
+
+body.dark-theme .list-group-item {
+  background-color: #161b22 !important;
+  color: #e6edf3 !important;
+  border-color: #30363d !important;
+}
+
+body.dark-theme .form-control {
+  background-color: #161b22 !important;
+  color: #e6edf3 !important;
+  border: 1px solid #30363d !important;
+}
+
+body.dark-theme .btn-light {
+  background-color: #21262d !important;
+  color: #e6edf3 !important;
+}
+
+body.dark-theme .bg-light {
+  background-color: #0d1117 !important;
+}
+
+/* for messages */
+/* body.dark-theme .card,
+body.dark-theme .flex-grow-1{
+background-color: #21262d;
+}
+
+body.dark-theme .row{
+background-color: #a7c3eb;
+} */
+
+
+/* for notificaitons */
+body.dark-theme .shadow-sm {
+  background-color: #161b22 !important;
+  color: #e6edf3 !important;
+}
+
+body.dark-theme .text-muted {
+  color: #8b949e !important;
+}
+
+
+/* media for chat */
+.chat-list-scroll::-webkit-scrollbar,
+.message-box-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-list-scroll,
+.message-box-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.message-box-scroll {
+  overflow-y: auto;
+  padding-bottom: 1rem;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+
+  /* Main container adjustments */
+  .mobile-container {
+    padding: 0 !important;
+    position: relative !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+
+  /* Chat List Mobile Styles */
+  .mobile-chat-list {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    height: 100vh !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .mobile-chat-header {
+    position: fixed !important;
+    top: 70px !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .mobile-chat-content {
+    position: fixed !important;
+    top: 130px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 0.5rem !important;
+    background: white !important;
+  }
+
+  /* Message Container Mobile Styles */
+  .mobile-message-container {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    height: 100vh !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .mobile-message-header {
+    position: fixed !important;
+    top: 70px !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .mobile-messages-content {
+    position: fixed !important;
+    top: 130px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 80px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 0.5rem !important;
+    background: white !important;
+  }
+
+  .mobile-message-input {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 101 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15) !important;
+    background: white !important;
+    margin: 0 !important;
+    height: 80px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.5rem !important;
+  }
+
+  /* Remove default margins and borders on mobile */
+  .row {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    height: 100vh !important;
+  }
+
+  .col-12 {
+    padding: 0 !important;
+    height: 100vh !important;
+  }
+
+  /* Ensure body doesn't scroll on mobile */
+  body {
+    overflow: hidden !important;
+  }
+
+  /* Fix the main viewport */
+  .vh-100 {
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+}
+
+ /* /* for update profile */
+@media (max-width: 767.98px) {
+  .custom-mobile-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .custom-mobile-card {
+    flex: 1;
+    overflow-y: auto;
+    border-radius: 0 !important;
+    padding: 1rem !important;
+    width: 100vw;
+    box-shadow: none !important;
+    border: none !important;
+    padding-bottom: 3rem !important;
+  }
+   
+}
+@media (max-width: 767.98px) {
+  body, html {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .mobile-scroll-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-bottom: 1rem;
+  }
+}
